@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TuanvinhCoreApp.Data.EF\TuanvinhCoreApp.Data.EF.csproj" />
+    <ProjectReference Include="..\TuanvinhCoreApp.Data\TuanvinhCoreApp.Data.csproj" />
+    <ProjectReference Include="..\TuanvinhCoreApp.Utilities\TuanvinhCoreApp.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Implementations\" />
+    <Folder Include="AutoMapper\" />
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+</Project>
