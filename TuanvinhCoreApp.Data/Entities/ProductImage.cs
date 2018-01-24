@@ -7,15 +7,18 @@ using TuanvinhCoreApp.Infrastructure.SharedKernel;
 
 namespace TuanvinhCoreApp.Data.Entities
 {
-    public class ProductTag : DomainEntity<int>
+    [Table("ProductImages")]
+    public class ProductImage : DomainEntity<int>
     {
         public int ProductId { get; set; }
 
-        [StringLength(50)]
-        [Column(TypeName = "varchar(50)")]
-        public string TagId { get; set; }
+        [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
-        public virtual Tag Tag { set; get; }
 
+        [StringLength(250)]
+        public string Path { get; set; }
+
+        [StringLength(250)]
+        public string Caption { get; set; }
     }
 }
