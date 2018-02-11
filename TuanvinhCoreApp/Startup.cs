@@ -11,6 +11,13 @@ using Microsoft.Extensions.DependencyInjection;
 using TuanvinhCoreApp.Data;
 using TuanvinhCoreApp.Models;
 using TuanvinhCoreApp.Services;
+using TuanvinhCoreApp.Data.EF;
+using TuanvinhCoreApp.Data.Entities;
+using AutoMapper;
+using TuanvinhCoreApp.Application.Interfaces;
+using TuanvinhCoreApp.Application.Implementations;
+using TuanvinhCoreApp.Data.IReportsitories;
+using TuanvinhCoreApp.Data.EF.Repositories;
 
 namespace TuanvinhCoreApp
 {
@@ -26,21 +33,30 @@ namespace TuanvinhCoreApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), o => o.MigrationsAssembly("TuanvinhCoreApp.Data.EF")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+            services.AddIdentity<AppUser, AppRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
+            services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
 
+            services.AddSingleton(Mapper.Configuration);
+            services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService));
+
+            services.AddTransient<IProductCategoryRepository, ProductCategoryRepository>();
+            services.AddTransient<IProductCategoryService, ProductCategoryService>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<DbInitializer>();
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, DbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -63,6 +79,7 @@ namespace TuanvinhCoreApp
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            dbInitializer.Seed().Wait();
         }
     }
 }

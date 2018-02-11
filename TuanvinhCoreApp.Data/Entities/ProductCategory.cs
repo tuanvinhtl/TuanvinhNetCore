@@ -15,6 +15,25 @@ namespace TuanvinhCoreApp.Data.Entities
         {
             Products = new List<Product>();
         }
+
+        public ProductCategory(string name, string decription, int? parentId
+            , int? homeOrder, string image, bool? homeFlag, string seoPageTitle, string seoAlias, string seoKeyword
+            , string seoDescription, Status status, int sortOrder)
+        {
+            Name = name;
+            Description = decription;
+            ParentId = parentId;
+            HomeOrder = homeOrder;
+            Image = image;
+            HomeFlag = homeFlag;
+            SeoPageTitle = seoPageTitle;
+            SeoAlias = seoAlias;
+            SeoKeywords = seoKeyword;
+            SeoDescription = seoDescription;
+            Status = status;
+            SortOrder = sortOrder;
+
+        }
         [StringLength(255)]
         [Required]
         public string Name { get; set; }
